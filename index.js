@@ -1,1 +1,1 @@
-// Hello world!
+export * from './src/index'
