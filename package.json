@@ -1,0 +1,25 @@
+{
+  "name": "react-router-native-navigation",
+  "version": "0.1.0",
+  "description": "Glue for navigation in react-native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vija02/react-router-native-navigation.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "navigation",
+    "react-router"
+  ],
+  "author": "Vija02",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vija02/react-router-native-navigation/issues"
+  },
+  "homepage": "https://github.com/Vija02/react-router-native-navigation#readme"
+}
