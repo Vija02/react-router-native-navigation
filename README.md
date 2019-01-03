@@ -60,3 +60,4 @@ User should be able to start developing with `react-router-native` and effortles
 ## How it works
 
 ## Roadmap
+- [] Web support
