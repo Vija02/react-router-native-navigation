@@ -11,41 +11,23 @@ export default class StackAnim extends Component {
 	}
 
 	componentDidMount() {
-		Animated.sequence([
-			Animated.timing(this.state.animationValue, {
-				useNativeDriver: true,
-				duration: 0,
-				toValue: this.props.animDirection,
-			}),
-			Animated.timing(this.state.animationValue, { useNativeDriver: true, toValue: 0, duration: 200 }),
-		]).start()
+		this.state.animationValue.setValue(this.props.animDirection)
+		Animated.timing(this.state.animationValue, { useNativeDriver: true, toValue: 0, duration: 200 }).start()
 	}
 
 	componentDidUpdate(prevProps) {
 		if (this.props.currentScreen !== prevProps.currentScreen) {
 			if (this.props.currentScreen) {
-				Animated.sequence([
-					Animated.timing(this.state.animationValue, {
-						useNativeDriver: true,
-						duration: 0,
-						toValue: this.props.animDirection,
-					}),
-					Animated.timing(this.state.animationValue, { useNativeDriver: true, toValue: 0, duration: 200 }),
-				]).start()
+				this.state.animationValue.setValue(this.props.animDirection)
+				Animated.timing(this.state.animationValue, { useNativeDriver: true, toValue: 0, duration: 200 }).start()
 			} else {
 				// Else, this is not current screen anymore. But it was, so value = 0
-				Animated.sequence([
-					Animated.timing(this.state.animationValue, {
-						useNativeDriver: true,
-						duration: 0,
-						toValue: 0,
-					}),
-					Animated.timing(this.state.animationValue, {
-						useNativeDriver: true,
-						toValue: -this.props.animDirection,
-						duration: 200,
-					}),
-				]).start()
+				this.state.animationValue.setValue(0)
+				Animated.timing(this.state.animationValue, {
+					useNativeDriver: true,
+					toValue: -this.props.animDirection,
+					duration: 200,
+				}).start()
 			}
 		}
 	}
