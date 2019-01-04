@@ -13,8 +13,6 @@ const defaultProps = {
 	lazy: false,
 }
 
-// TODO: We need to make this behave like switch (Only render one thing and one thing only)
-
 class BottomNavigationSwitch extends Component {
 	componentDidMount() {
 		this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -33,23 +31,35 @@ class BottomNavigationSwitch extends Component {
 	render() {
 		return (
 			<View style={styles.flexFull}>
-				{this.props.children.map((child, i) => (
-					<Route
-						key={`route_${i}`}
-						path={child.props.path}
-						exact={child.props.exact}
-						strict={child.props.strict}
-						sensitive={child.props.sensitive}
-						children={({ match }) => (
-							<ShowIfMatch match={!!match} lazy={this.props.lazy}>
-								{/* We make the route always render by always matching the path */}
-								{React.cloneElement(child, {
-									location: { pathname: child.props.path },
-								})}
-							</ShowIfMatch>
-						)}
-					/>
-				))}
+				{(() => {
+					let matched = false
+
+					return this.props.children.map((child, i) => (
+						<Route
+							key={`route_${i}`}
+							path={child.props.path}
+							exact={child.props.exact}
+							strict={child.props.strict}
+							sensitive={child.props.sensitive}
+							children={({ match }) => {
+								let isMatched = false
+
+								if (!matched && !!match) {
+									isMatched = true
+									matched = true
+								}
+								return (
+									<ShowIfMatch match={isMatched} lazy={this.props.lazy}>
+										{/* We make the route always render by always matching the path */}
+										{React.cloneElement(child, {
+											location: { pathname: child.props.path },
+										})}
+									</ShowIfMatch>
+								)
+							}}
+						/>
+					))
+				})()}
 			</View>
 		)
 	}
