@@ -1,10 +1,24 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Route } from 'react-router-native'
+import { View, BackHandler, StyleSheet } from 'react-native'
+import { withRouter, Route } from 'react-router-native'
 
 // TODO: Proptypes
 
-export default class BottomNavigationSwitch extends Component {
+class BottomNavigationSwitch extends Component {
+	componentDidMount() {
+		this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+			if (this.props.history.canGo(-1)) {
+				this.props.history.goBack()
+				return true
+			}
+			return false
+		})
+	}
+
+	componentWillUnmount() {
+		this.backHandler.remove()
+	}
+
 	render() {
 		return (
 			<View style={styles.flexFull}>
@@ -29,6 +43,8 @@ export default class BottomNavigationSwitch extends Component {
 		)
 	}
 }
+
+export default withRouter(BottomNavigationSwitch)
 
 class ShowIfMatch extends Component {
 	// This will prevent update calls to the component if it's not matched
