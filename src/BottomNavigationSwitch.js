@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { View, BackHandler, StyleSheet } from 'react-native'
 import { withRouter, Route } from 'react-router-native'
 
-// TODO: Proptypes
+const propTypes = {
+	lazy: PropTypes.bool,
+}
+
+const defaultProps = {
+	lazy: false,
+}
+
+// TODO: We need to make this behave like switch (Only render one thing and one thing only)
 
 class BottomNavigationSwitch extends Component {
 	componentDidMount() {
@@ -30,7 +39,7 @@ class BottomNavigationSwitch extends Component {
 						strict={child.props.strict}
 						sensitive={child.props.sensitive}
 						children={({ match }) => (
-							<ShowIfMatch match={match}>
+							<ShowIfMatch match={match} lazy={this.props.lazy}>
 								{/* We make the route always render by always matching the path */}
 								{React.cloneElement(child, {
 									location: { pathname: child.props.path },
@@ -44,16 +53,32 @@ class BottomNavigationSwitch extends Component {
 	}
 }
 
+BottomNavigationSwitch.propTypes = propTypes
+BottomNavigationSwitch.defaultProps = defaultProps
 export default withRouter(BottomNavigationSwitch)
 
 class ShowIfMatch extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { rendered: false }
+	}
+
 	// This will prevent update calls to the component if it's not matched
 	shouldComponentUpdate(nextProps) {
 		return nextProps.match !== this.props.match
 	}
 
+	componentDidUpdate() {
+		if (this.props.match && !this.state.rendered) {
+			this.setState({ rendered: true })
+		}
+	}
+
 	render() {
 		const match = this.props.match
+		if (!match && this.props.lazy && !this.state.rendered) {
+			return null
+		}
 		return <View style={match ? styles.flexFull : styles.displayNone}>{this.props.children}</View>
 	}
 }
