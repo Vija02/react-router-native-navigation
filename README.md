@@ -2,7 +2,7 @@
 
 ## **This repo is still under development**
 
-Navigation is hard. It shouldn't be that way. There are plenty of great libraries out there that can help you create good navigation. This package is the glue you wanted.
+Navigation in react-native is hard. It shouldn't be that way. There are plenty of great libraries out there that can help you create good navigation. This package is the glue you wanted.
 
 As the name suggest, this package is heavily influenced by React Router. The aim is to make it a drop-in replacement for react-router-native as much as possible.
 
@@ -83,7 +83,7 @@ These component are the core of this library. They make navigation behave like t
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| lazy | `boolean` | false | Should the routes load before opened? |
+| lazy | `boolean` | false | Should all routes load at the beginning?  |
 
 > Note: The above components behaves a bit differently from `react-router`'s `Switch`. `StackSwitch` and `BottomNavigationSwitch` will render all of the route but only show the matching one. This shouldn't be a problem unless you're relying on it to work that way. If that's not the behaviour you want, simply using `react-router-native` alone should be sufficient.
 
