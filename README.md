@@ -37,9 +37,13 @@ export default class App extends React.Component {
 
 ## Features
 
-- [ ] Remembers state
-- [ ] Stack Navigation 
-- [ ] Bottom Navigation 
+- [x] Remembers previous screen states
+- [ ] Handles back button presses
+- [ ] Allows nesting
+- [ ] Custom animations
+- [ ] Baked in UI
+- [x] Stack Navigation 
+- [x] Bottom Navigation 
 
 ## Installation
 
@@ -50,13 +54,38 @@ yarn add react-router-native-navigation
 
 ## Docs
 
-### <StackSwitch />
+## *Switches*
 
+These component are the core of this library. They make navigation behave like they should.
 
+### **\<StackSwitch />**
 
-### <BottomNavigationSwitch />
+#### Usage
 
-> Note: This component behaves a bit differently from `react-router`'s `Switch`. `BottomNavigationSwitch` will render all of the route but only show the matching one. This shouldn't be a problem unless you're relying on it to work that way. If that's not the behaviour you want, simply using `react-router-native` should be sufficient.
+```js
+
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| animation | `string`\|`object`\|`function` | 'default' | The animation that will be run. For more info, see the documentation down on [Custom Animation](#custom-animation) |
+
+### \<BottomNavigationSwitch />
+
+#### Usage
+
+```js
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| lazy | `boolean` | false | Should the routes load before opened? |
+
+> Note: The above components behaves a bit differently from `react-router`'s `Switch`. `StackSwitch` and `BottomNavigationSwitch` will render all of the route but only show the matching one. This shouldn't be a problem unless you're relying on it to work that way. If that's not the behaviour you want, simply using `react-router-native` alone should be sufficient.
 
 ### Custom Animation
 
