@@ -5,6 +5,8 @@ import { View } from 'react-native'
 import StackAnim from './StackAnim'
 import UpdateIfMatch from '../utils/UpdateIfMatch'
 
+//TODO:PROPTYEPS
+
 // This component handles the behaviour of Stack. Informations are processed then passed to StackAnim.
 class StackSwitch extends Component {
 	constructor(props) {
@@ -81,16 +83,17 @@ class StackSwitch extends Component {
 			<View style={{ flex: 1 }}>
 				{/* Here, we render every page(to maintain state) but only show the one currently active */}
 				{this.state.stack.map((location, index) => {
-					// We use a Switch here to know which Route to render by passing the location on the stack
 					return (
 						<UpdateIfMatch
 							key={`stack_${index}`}
 							match={this.props.history.index === this.state.initialIndex + index}
 						>
 							<StackAnim
+                animationProp={this.props.animationProp}
 								animDirection={this.state.animDirection}
 								currentScreen={this.props.history.index === this.state.initialIndex + index}
 							>
+								{/* We use a Switch here to know which Route to render by passing the location on the stack */}
 								{/* The key will make sure PUSH creates a component instead of using old ones */}
 								<Switch key={location.key} location={location}>
 									{this.props.children}
