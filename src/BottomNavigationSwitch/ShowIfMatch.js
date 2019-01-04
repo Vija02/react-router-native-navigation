@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { View, StyleSheet } from 'react-native'
 
+import UpdateIfMatch from '../utils/UpdateIfMatch'
+
 const propTypes = {
 	match: PropTypes.bool,
 	lazy: PropTypes.bool,
@@ -18,11 +20,6 @@ class ShowIfMatch extends Component {
 		this.state = { rendered: false }
 	}
 
-	// This will prevent update calls to the component if it's not matched
-	shouldComponentUpdate(nextProps) {
-		return nextProps.match !== this.props.match
-	}
-
 	componentDidUpdate() {
 		if (this.props.match && !this.state.rendered) {
 			this.setState({ rendered: true })
@@ -34,7 +31,11 @@ class ShowIfMatch extends Component {
 		if (!match && this.props.lazy && !this.state.rendered) {
 			return null
 		}
-		return <View style={match ? styles.flexFull : styles.displayNone}>{this.props.children}</View>
+		return (
+			<UpdateIfMatch match={match}>
+				<View style={match ? styles.flexFull : styles.displayNone}>{this.props.children}</View>
+			</UpdateIfMatch>
+		)
 	}
 }
 
