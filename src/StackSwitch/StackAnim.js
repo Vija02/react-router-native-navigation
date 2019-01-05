@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
-import { Animated, Dimensions } from 'react-native'
+import PropTypes from 'prop-types'
+import { Animated } from 'react-native'
 
-// TODO:PROPTYPES
+const propTypes = {
+	transitionConfig: PropTypes.func,
+}
+
+const defaultProps = {
+	transitionConfig: null,
+}
+
 // This Component gets info through props and is responsible to handle all the animation
-export default class StackAnim extends Component {
+class StackAnim extends Component {
 	constructor(props) {
 		super(props)
 		this.state = { animationValue: new Animated.Value(0) }
@@ -12,22 +20,22 @@ export default class StackAnim extends Component {
 	}
 
 	componentDidMount() {
-		this.runAnimation(this.props.animDirection, 0, this.props.animationProp)
+		this.runAnimation(this.props.animDirection, 0, this.props.transitionConfig)
 	}
 
 	componentDidUpdate(prevProps) {
 		if (this.props.currentScreen !== prevProps.currentScreen) {
 			if (this.props.currentScreen) {
-				this.runAnimation(this.props.animDirection, 0, this.props.animationProp)
+				this.runAnimation(this.props.animDirection, 0, this.props.transitionConfig)
 			} else {
 				// Else, this is not current screen anymore. But it was, so value = 0
-				this.runAnimation(0, -this.props.animDirection, this.props.animationProp)
+				this.runAnimation(0, -this.props.animDirection, this.props.transitionConfig)
 			}
 		}
 	}
 
-	runAnimation(initialValue, toValue, animationProp) {
-		const { animatedFunction, config } = animationProp
+	runAnimation(initialValue, toValue, transitionConfig) {
+		const { animatedFunction, config } = transitionConfig
 		this.state.animationValue.setValue(initialValue)
 		animatedFunction(this.state.animationValue, {
 			toValue,
@@ -47,7 +55,7 @@ export default class StackAnim extends Component {
 						right: 0,
 						bottom: 0,
 					},
-					this.props.animationProp.style(this.state.animationValue),
+					this.props.transitionConfig.style(this.state.animationValue),
 				]}
 			>
 				{children}
@@ -55,3 +63,7 @@ export default class StackAnim extends Component {
 		)
 	}
 }
+
+StackAnim.propTypes = propTypes
+StackAnim.defaultProps = defaultProps
+export default StackAnim

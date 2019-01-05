@@ -89,7 +89,7 @@ class StackSwitch extends Component {
 							match={this.props.history.index === this.state.initialIndex + index}
 						>
 							<StackAnim
-                animationProp={this.props.animationProp}
+                transitionConfig={this.props.transitionConfig}
 								animDirection={this.state.animDirection}
 								currentScreen={this.props.history.index === this.state.initialIndex + index}
 							>
