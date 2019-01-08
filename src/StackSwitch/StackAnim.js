@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Animated } from 'react-native'
+import { Animated, Dimensions } from 'react-native'
+import { withRouter } from 'react-router-native'
+
+const { height } = Dimensions.get('window')
 
 const propTypes = {
 	transitionConfig: PropTypes.func,
@@ -35,27 +38,51 @@ class StackAnim extends Component {
 	}
 
 	runAnimation(initialValue, toValue, transitionConfig) {
-		const { animatedFunction, config } = transitionConfig
+		const { transitionSpec } = transitionConfig()
+
 		this.state.animationValue.setValue(initialValue)
-		animatedFunction(this.state.animationValue, {
-			toValue,
-			...config,
-		}).start()
+		transitionSpec
+			.timing(this.state.animationValue, {
+				toValue,
+				...transitionSpec,
+			})
+			.start(this.props.onFinishedAnimating)
 	}
 
 	render() {
 		const { children } = this.props
+
+		const shouldShow = this.props.currentScreen || this.props.animating
+		const viewStyle = shouldShow
+			? {
+					display: 'flex',
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					right: 0,
+					bottom: 0,
+				}
+			: {
+					display: 'none',
+				}
+
 		return (
 			<Animated.View
+				pointerEvents={this.props.animating ? 'none' : 'auto'}
 				style={[
-					{
-						position: 'absolute',
-						top: 0,
-						left: 0,
-						right: 0,
-						bottom: 0,
-					},
-					this.props.transitionConfig.style(this.state.animationValue),
+					viewStyle,
+					this.props.transitionConfig().containerStyle || {},
+					this.props.transitionConfig().screenInterpolator({
+						layout: {
+							isMeasured: true,
+							initHeight: height,
+						},
+						history: this.props.history,
+						position: this.state.animationValue,
+						scenes: this.props.history.entries,
+						scene: this.props.location,
+						index: this.props.history.index,
+					}),
 				]}
 			>
 				{children}
@@ -66,4 +93,4 @@ class StackAnim extends Component {
 
 StackAnim.propTypes = propTypes
 StackAnim.defaultProps = defaultProps
-export default StackAnim
+export default withRouter(StackAnim)

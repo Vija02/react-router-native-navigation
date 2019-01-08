@@ -29,6 +29,7 @@ class StackSwitch extends Component {
 		const newStack = this.state.stack
 		newStack.push(this.props.history.location)
 		this.setState({
+			animating: true,
 			stack: newStack,
 			initialIndex: this.props.history.index,
 			currentIndex: this.props.history.index,
@@ -54,14 +55,14 @@ class StackSwitch extends Component {
 			// We'll effectively remove the locations after our index here
 			// Get until current location
 			const newStack = [...stack.slice(0, nextProps.history.index - initialIndex), nextProps.location]
-			this.setState({ stack: newStack, currentIndex: nextProps.history.index, animDirection: 1 })
+			this.setState({ animating: true, stack: newStack, currentIndex: nextProps.history.index, animDirection: 1 })
 		} else if (nextProps.history.action === 'REPLACE') {
 			const newStack = [
 				...stack.slice(0, Math.max(nextProps.history.index - initialIndex - 1, 0)),
 				nextProps.location,
 				...stack.slice(nextProps.history.index - initialIndex + 1),
 			]
-			this.setState({ stack: newStack, currentIndex: nextProps.history.index, animDirection: 0 })
+			this.setState({ animating: true, stack: newStack, currentIndex: nextProps.history.index, animDirection: 0 })
 		} else if (nextProps.history.action === 'POP') {
 			// POP happens when go() is called. So goForward and goBack will end up here.
 			// But we don't really care what happens since we're not doing anything to the stack.
@@ -70,9 +71,9 @@ class StackSwitch extends Component {
 			const step = nextProps.history.index - this.state.currentIndex
 
 			if (step > 0) {
-				this.setState({ currentIndex: nextProps.history.index, animDirection: 1 })
+				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: 1 })
 			} else {
-				this.setState({ currentIndex: nextProps.history.index, animDirection: -1 })
+				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: -1 })
 			}
 		}
 		return
@@ -89,7 +90,15 @@ class StackSwitch extends Component {
 							match={this.props.history.index === this.state.initialIndex + index}
 						>
 							<StackAnim
-                transitionConfig={this.props.transitionConfig}
+								// TODO: Here, we can improve performance by not updating those that doesn't need to be animated
+								// key={`stack_anim_${index}`}
+								animating={this.state.animating}
+								onFinishedAnimating={() => {
+									if (this.state.animating) {
+										this.setState({ animating: false })
+									}
+								}}
+								transitionConfig={this.props.transitionConfig}
 								animDirection={this.state.animDirection}
 								currentScreen={this.props.history.index === this.state.initialIndex + index}
 							>

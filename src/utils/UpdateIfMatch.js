@@ -12,7 +12,7 @@ const defaultProps = {
 // This component just checks if there's changes and block it if there's none
 class UpdateIfMatch extends Component {
 	shouldComponentUpdate(nextProps) {
-		return nextProps.match !== this.props.match
+		return nextProps.match !== this.props.match || nextProps.children !== this.props.children
 	}
 
 	render() {
