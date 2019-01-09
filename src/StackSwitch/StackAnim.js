@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Animated, Dimensions, ViewPropTypes } from 'react-native'
 import { withRouter } from 'react-router-native'
 
-const { height } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 
 const propTypes = {
 	transitionConfigObject: PropTypes.shape({
@@ -52,6 +52,7 @@ class StackAnim extends Component {
 		transitionSpec
 			.timing(this.state.animationValue, {
 				toValue,
+				useNativeDriver: true,
 				...transitionSpec,
 			})
 			.start(this.props.onFinishedAnimating)
@@ -84,6 +85,7 @@ class StackAnim extends Component {
 						layout: {
 							isMeasured: true,
 							initHeight: height,
+							initWidth: width,
 						},
 						history: this.props.history,
 						position: this.state.animationValue,
