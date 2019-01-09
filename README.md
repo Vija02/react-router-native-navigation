@@ -65,7 +65,25 @@ These component are the core of this library. They make navigation behave like t
 #### Usage
 
 ```js
+import React from 'react'
+import { View, Text } from 'react-native'
+import { NativeRouter } from 'react-router-native'
+import { StackSwitch } from 'react-router-native-navigation'
 
+export default class App extends React.Component {
+  render() {
+    return (
+      <NativeRouter>
+        <StackSwitch>
+          <Route exact path="/" render={() => <View><Text>Home</Text></View>} />
+          <Route path="/settings" render={() => <View><Text>Settings</Text></View>} />
+        </StackSwitch>
+        <Link to="/"><Text>Home</Text></Link>
+        <Link to="/settings"><Text>Settings</Text></Link>
+      </NativeRouter>
+    );
+  }
+}
 ```
 
 #### Props
@@ -80,6 +98,25 @@ These component are the core of this library. They make navigation behave like t
 #### Usage
 
 ```js
+import React from 'react'
+import { View, Text } from 'react-native'
+import { NativeRouter } from 'react-router-native'
+import { BottomNavigationSwitch } from 'react-router-native-navigation'
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <NativeRouter>
+        <BottomNavigationSwitch>
+          <Route exact path="/" render={() => <View><Text>Home</Text></View>} />
+          <Route path="/settings" render={() => <View><Text>Settings</Text></View>} />
+        </BottomNavigationSwitch>
+        <Link to="/"><Text>Home</Text></Link>
+        <Link to="/settings"><Text>Settings</Text></Link>
+      </NativeRouter>
+    );
+  }
+}
 ```
 
 #### Props
