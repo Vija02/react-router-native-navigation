@@ -40,7 +40,7 @@ export default class App extends React.Component {
 - [x] React Router goodness
 - [x] Remembers previous screen states
 - [x] Handles back button presses
-- [x] Custom animations
+- [x] Custom stack animations
 - [ ] Allows nesting (I think this should work out of the box but not tested yet)
 - [ ] Baked in UI
 - [ ] Lifecycle
