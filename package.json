@@ -4,6 +4,7 @@
   "description": "Glue for navigation in react-native",
   "main": "index.js",
   "scripts": {
+    "release": "release-it",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,6 +39,7 @@
     "eslint-plugin-flowtype": "2.x",
     "eslint-plugin-import": "2.x",
     "eslint-plugin-jsx-a11y": "6.x",
-    "eslint-plugin-react": "7.x"
+    "eslint-plugin-react": "7.x",
+    "release-it": "^9.6.5"
   }
 }
