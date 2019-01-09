@@ -28,6 +28,7 @@
     "react-router-native": "4.3.x"
   },
   "dependencies": {
+    "clone-deep": "^4.0.1",
     "prop-types": "^15.6.2"
   }
 }
