@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Switch, Route } from 'react-router-native'
-import { View } from 'react-native'
+import { BackHandler, View } from 'react-native'
 import cloneDeep from 'clone-deep'
 
 import StackAnim from './StackAnim'
@@ -36,6 +36,20 @@ class StackSwitch extends Component {
 			currentHistory: cloneDeep(this.props.history),
 			prevHistory: cloneDeep(this.props.history),
 		}
+	}
+
+	componentDidMount() {
+		this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+			if (this.props.history.canGo(-1)) {
+				this.props.history.goBack()
+				return true
+			}
+			return false
+		})
+	}
+
+	componentWillUnmount() {
+		this.backHandler.remove()
 	}
 
 	componentWillMount() {
