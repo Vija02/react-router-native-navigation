@@ -1,0 +1,106 @@
+/*
+  This folder is a slightly modified version of react-navigation-stack StackViewTransitionConfigs
+  https://github.com/react-navigation/react-navigation-stack/blob/master/src/views/StackView/StackViewTransitionConfigs.js
+*/
+
+import { Animated, Easing, Platform } from 'react-native'
+import StyleInterpolator from './StackViewStyleInterpolator'
+import { supportsImprovedSpringAnimation } from './ReactNativeFeatures'
+
+let IOSTransitionSpec
+if (supportsImprovedSpringAnimation()) {
+	// These are the exact values from UINavigationController's animation configuration
+	IOSTransitionSpec = {
+		timing: Animated.spring,
+		stiffness: 1000,
+		damping: 500,
+		mass: 3,
+		overshootClamping: true,
+		restDisplacementThreshold: 0.01,
+		restSpeedThreshold: 0.01,
+	}
+} else {
+	// This is an approximation of the IOS spring animation using a derived bezier curve
+	IOSTransitionSpec = {
+		duration: 500,
+		easing: Easing.bezier(0.2833, 0.99, 0.31833, 0.99),
+		timing: Animated.timing,
+	}
+}
+
+// Standard iOS navigation transition
+const SlideFromRightIOS = {
+	transitionSpec: IOSTransitionSpec,
+	screenInterpolator: StyleInterpolator.forHorizontal,
+	containerStyle: {
+		backgroundColor: '#eee',
+	},
+}
+
+// Standard iOS navigation transition for modals
+const ModalSlideFromBottomIOS = {
+	transitionSpec: IOSTransitionSpec,
+	screenInterpolator: StyleInterpolator.forVertical,
+	containerStyle: {
+		backgroundColor: '#eee',
+	},
+}
+
+// Standard Android navigation transition when opening an Activity
+const FadeInFromBottomAndroid = {
+	// See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_open_enter.xml
+	transitionSpec: {
+		duration: 350,
+		easing: Easing.out(Easing.poly(5)), // decelerate
+		timing: Animated.timing,
+	},
+	screenInterpolator: StyleInterpolator.forFadeFromBottomAndroid,
+}
+
+// Standard Android navigation transition when closing an Activity
+const FadeOutToBottomAndroid = {
+	// See http://androidxref.com/7.1.1_r6/xref/frameworks/base/core/res/res/anim/activity_close_exit.xml
+	transitionSpec: {
+		duration: 150,
+		easing: Easing.in(Easing.linear), // accelerate
+		timing: Animated.timing,
+	},
+	screenInterpolator: StyleInterpolator.forFadeToBottomAndroid,
+}
+
+function defaultTransitionConfig(history, prevHistory, isModal) {
+	if (Platform.OS === 'android') {
+		// Use the default Android animation no matter if the screen is a modal.
+		// Android doesn't have full-screen modals like iOS does, it has dialogs.
+		if (prevHistory && history.index < prevHistory.index) {
+			// Navigating back to the previous screen
+			return FadeOutToBottomAndroid
+		}
+		return FadeInFromBottomAndroid
+	}
+	// iOS and other platforms
+	if (isModal) {
+		return ModalSlideFromBottomIOS
+	}
+	return SlideFromRightIOS
+}
+
+function getTransitionConfig(transitionConfigurer, history, prevHistory, isModal) {
+	const defaultConfig = defaultTransitionConfig(history, prevHistory, isModal)
+	if (transitionConfigurer) {
+		return {
+			...defaultConfig,
+			...transitionConfigurer(history, prevHistory, isModal),
+		}
+	}
+	return defaultConfig
+}
+
+export {
+	defaultTransitionConfig,
+	getTransitionConfig,
+	SlideFromRightIOS,
+	ModalSlideFromBottomIOS,
+	FadeInFromBottomAndroid,
+	FadeOutToBottomAndroid,
+}
