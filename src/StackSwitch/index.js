@@ -55,7 +55,7 @@ class StackSwitch extends Component {
 			// We'll effectively remove the locations after our index here
 			// Get until current location
 			const newStack = [...stack.slice(0, nextProps.history.index - initialIndex), nextProps.location]
-			this.setState({ animating: true, stack: newStack, currentIndex: nextProps.history.index, animDirection: 1 })
+			this.setState({ animating: true, stack: newStack, currentIndex: nextProps.history.index, animDirection: -1 })
 		} else if (nextProps.history.action === 'REPLACE') {
 			const newStack = [
 				...stack.slice(0, Math.max(nextProps.history.index - initialIndex - 1, 0)),
@@ -71,9 +71,9 @@ class StackSwitch extends Component {
 			const step = nextProps.history.index - this.state.currentIndex
 
 			if (step > 0) {
-				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: 1 })
-			} else {
 				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: -1 })
+			} else {
+				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: 1 })
 			}
 		}
 		return
