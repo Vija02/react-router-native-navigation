@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Animated, Dimensions, View } from 'react-native'
+import { Animated, Dimensions, ViewPropTypes } from 'react-native'
 import { withRouter } from 'react-router-native'
 
 const { height } = Dimensions.get('window')
@@ -13,7 +13,7 @@ const propTypes = {
 			timing: PropTypes.func,
 		}),
 		screenInterpolator: PropTypes.func,
-		containerStyle: View.propTypes.style,
+		containerStyle: ViewPropTypes.style,
 	}),
 }
 
