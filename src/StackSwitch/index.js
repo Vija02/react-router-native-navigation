@@ -97,6 +97,7 @@ class StackSwitch extends Component {
 			]
 			this.setState({
 				...stateToUpdate,
+				animating: false,
 				stack: newStack,
 				currentIndex: nextProps.history.index,
 				animDirection: 0,
