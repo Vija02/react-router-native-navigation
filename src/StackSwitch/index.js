@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Switch, Route } from 'react-router-native'
 import { View } from 'react-native'
 import cloneDeep from 'clone-deep'
@@ -6,7 +7,15 @@ import cloneDeep from 'clone-deep'
 import StackAnim from './StackAnim'
 import UpdateIfMatch from '../utils/UpdateIfMatch'
 
-//TODO:PROPTYEPS
+const propTypes = {
+	mode: PropTypes.string,
+	transitionConfig: PropTypes.func,
+}
+
+const defaultProps = {
+	mode: 'card',
+	transitionConfig: null,
+}
 
 // This component handles the behaviour of Stack. Informations are processed then passed to StackAnim.
 class StackSwitch extends Component {
@@ -147,6 +156,9 @@ class StackSwitch extends Component {
 		)
 	}
 }
+
+StackSwitch.propTypes = propTypes
+StackSwitch.defaultProps = defaultProps
 
 // inject location as a prop so we can listen for changes
 const RouteWrapper = props => (
