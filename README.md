@@ -90,7 +90,7 @@ export default class App extends React.Component {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| mode | `string` | `card` | The animation mode. This is currently the only value so it's a bit useless. However, it will mirror the value in [react-navigation](https://reactnavigation.org/docs/en/stack-navigator.html). Namely, `modal` |
+| mode | `string` | `card` | The animation mode. Accepts `card` or `modal`. |
 | transitionConfig | `function` | `null` | Custom animation config object. For more info, see the documentation down on [Custom Animation](#custom-animation) |
 
 ### \<BottomNavigationSwitch />
@@ -183,11 +183,11 @@ Simply use `<DeepLinking />` provided by [react-router-native](https://reacttrai
 
 ## Motivation
 
-There are `react-navigation`, `react-router-navigation` along with countless other libraries out there. Most of them are pretty complicated and tries to do a lot of things. At the end of the day, the API can get pretty confusing and performance doesn't come easily.
+There are `react-navigation`, `react-router-navigation` along with countless other libraries out there. Most of them are pretty complicated and tries to do too much. At the end of the day, the API can get pretty confusing and performance doesn't come easily.
 
 ## Aim
 
-This package should provide a production ready default that can be inserted in any project. Adding to that, developers should be able to create their own glue by using the base component provided by the package.
+This package should provide a production ready default that can be inserted to any project. Adding to that, developers should be able to create their own glue by using the base component provided by the package.
 
 User should be able to start developing with `react-router-native` and effortlessly create great navigation using this package.
 
@@ -195,12 +195,14 @@ Last but not least, it should remain simple but customizable!
 
 ## Current Limitations
 
-The [history](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md) API can be a bit limiting for a complex navigation. For example, your history stack will get out of control if you don't configure it properly/never reset it. This is not great because all of the entries in the history stack will still be rendered even when it's not used. You can manually reset the stack by mutating the `history` object. But this will lead to inconsistency with this library. TODO: Perhaps we should add a method to allow changes from within the Switches component.
+To store previous states of the route, we emulate how `Switch` works. This meant that might be differences they behave. Right now, `props.match` and other props passed through probably behaves differently than you would expect. We could probably recreate the props ourself and pass it down.
+
+The [history](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md) API can be a bit limiting for complex navigations. For example, your history stack will get out of control if you don't configure it properly/never reset it. This is not great because all of the entries in the history stack will still be rendered even when it's not used. You can manually reset the stack by mutating the `history` object. But this will lead to inconsistency with this library. TODO: Perhaps we should add a method to allow changes from within the Switch components.
 
 No Header support. One of the big decision when this library was made was whether it should support have its own header. In the spirit of keeping things simple, you will have to bring your own header component. There's an example TODO: [here]() that illustrates how to do just that.  
 However, I'm aware there might be some demand for transitions inside the header itself. I'm open to suggestions on how best to implement it.
 
-There are quite a few edge cases that might not be handled yet. Please report them if you find one!
+There are probably plenty of edge cases that are not be handled yet. Please report them if you find any!
 
 ## How it works
 
