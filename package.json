@@ -30,5 +30,14 @@
   "dependencies": {
     "clone-deep": "^4.0.1",
     "prop-types": "^15.6.2"
+  },
+  "devDependencies": {
+    "babel-eslint": "9.x",
+    "eslint": "5.x",
+    "eslint-config-react-app": "^3.0.6",
+    "eslint-plugin-flowtype": "2.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x"
   }
 }
