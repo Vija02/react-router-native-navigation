@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Switch, Route } from 'react-router-native'
-import { BackHandler, View } from 'react-native'
+import { BackButton, Switch, Route } from 'react-router-native'
+import { View } from 'react-native'
 import cloneDeep from 'clone-deep'
 
 import StackAnim from './StackAnim'
@@ -36,20 +36,6 @@ class StackSwitch extends Component {
 			currentHistory: cloneDeep(this.props.history),
 			prevHistory: cloneDeep(this.props.history),
 		}
-	}
-
-	componentDidMount() {
-		this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-			if (this.props.history.canGo(-1)) {
-				this.props.history.goBack()
-				return true
-			}
-			return false
-		})
-	}
-
-	componentWillUnmount() {
-		this.backHandler.remove()
 	}
 
 	componentWillMount() {
@@ -134,42 +120,44 @@ class StackSwitch extends Component {
 
 	render() {
 		return (
-			<View style={{ flex: 1 }}>
-				{/* Here, we render every page(to maintain state) but only show the one currently active */}
-				{this.state.stack.map((location, index) => {
-					return (
-						<UpdateIfMatch
-							key={`stack_${index}`}
-							match={this.props.history.index === this.state.initialIndex + index}
-						>
-							<StackAnim
-								// TODO: Here, we can improve performance by not updating those that doesn't need to be animated
-								// key={`stack_anim_${index}`}
-								animating={this.state.animating}
-								onFinishedAnimating={() => {
-									if (this.state.animating) {
-										this.setState({ animating: false })
-									}
-								}}
-								transitionConfigObject={getTransitionConfig(
-									this.props.transitionConfig,
-									this.state.currentHistory,
-									this.state.prevHistory,
-									this.props.mode === 'modal',
-								)}
-								animDirection={this.state.animDirection}
-								currentScreen={this.props.history.index === this.state.initialIndex + index}
+			<BackButton>
+				<View style={{ flex: 1 }}>
+					{/* Here, we render every page(to maintain state) but only show the one currently active */}
+					{this.state.stack.map((location, index) => {
+						return (
+							<UpdateIfMatch
+								key={`stack_${index}`}
+								match={this.props.history.index === this.state.initialIndex + index}
 							>
-								{/* We use a Switch here to know which Route to render by passing the location on the stack */}
-								{/* The key will make sure PUSH creates a component instead of using old ones */}
-								<Switch key={location.key} location={location}>
-									{this.props.children}
-								</Switch>
-							</StackAnim>
-						</UpdateIfMatch>
-					)
-				})}
-			</View>
+								<StackAnim
+									// TODO: Here, we can improve performance by not updating those that doesn't need to be animated
+									// key={`stack_anim_${index}`}
+									animating={this.state.animating}
+									onFinishedAnimating={() => {
+										if (this.state.animating) {
+											this.setState({ animating: false })
+										}
+									}}
+									transitionConfigObject={getTransitionConfig(
+										this.props.transitionConfig,
+										this.state.currentHistory,
+										this.state.prevHistory,
+										this.props.mode === 'modal',
+									)}
+									animDirection={this.state.animDirection}
+									currentScreen={this.props.history.index === this.state.initialIndex + index}
+								>
+									{/* We use a Switch here to know which Route to render by passing the location on the stack */}
+									{/* The key will make sure PUSH creates a component instead of using old ones */}
+									<Switch key={location.key} location={location}>
+										{this.props.children}
+									</Switch>
+								</StackAnim>
+							</UpdateIfMatch>
+						)
+					})}
+				</View>
+			</BackButton>
 		)
 	}
 }
