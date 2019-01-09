@@ -62,6 +62,8 @@ These component are the core of this library. They make navigation behave like t
 
 ### **\<StackSwitch />**
 
+A switch component that simulates Stack navigation. Only 1 screen is shown at a time. The rest are hidden but are still rendered to preserve their state. Transitions are handled and customizable similar to `react-navigation`
+
 #### Usage
 
 ```js
@@ -94,6 +96,8 @@ export default class App extends React.Component {
 | transitionConfig | `function` | `null` | Custom animation config object. For more info, see the documentation down on [Custom Animation](#custom-animation) |
 
 ### \<BottomNavigationSwitch />
+
+Basically the same as `StackSwitch` except without transitions. However, only the amount of routes will be rendered, this is the same as using the `children` props in `Route`.
 
 #### Usage
 
