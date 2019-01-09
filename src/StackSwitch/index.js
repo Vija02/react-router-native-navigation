@@ -10,7 +10,7 @@ import UpdateIfMatch from '../utils/UpdateIfMatch'
 import { getTransitionConfig } from './StackViewTransitionConfigs'
 
 const propTypes = {
-	mode: PropTypes.string,
+	mode: PropTypes.oneOf(['card', 'modal']),
 	transitionConfig: PropTypes.func,
 }
 
@@ -136,12 +136,11 @@ class StackSwitch extends Component {
 										this.setState({ animating: false })
 									}
 								}}
-								mode={this.props.mode}
 								transitionConfigObject={getTransitionConfig(
 									this.props.transitionConfig,
 									this.state.currentHistory,
 									this.state.prevHistory,
-									false, // TODO: Handle isModal
+									this.props.mode === 'modal',
 								)}
 								animDirection={this.state.animDirection}
 								currentScreen={this.props.history.index === this.state.initialIndex + index}
