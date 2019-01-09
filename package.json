@@ -1,7 +1,7 @@
 {
   "name": "react-router-native-navigation",
   "version": "0.2.0",
-  "description": "Glue for navigation in react-native",
+  "description": "Painless navigation for react-native with react-router",
   "main": "index.js",
   "scripts": {
     "release": "release-it",
