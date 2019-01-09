@@ -73,7 +73,7 @@ These component are the core of this library. They make navigation behave like t
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | mode | `string` | `card` | The animation mode. This is currently the only value so it's a bit useless. However, it will mirror the value in [react-navigation](https://reactnavigation.org/docs/en/stack-navigator.html). Namely, `modal` |
-| transitionConfig | `object` | `null` | Custom animation config object. For more info, see the documentation down on [Custom Animation](#custom-animation) |
+| transitionConfig | `function` | `null` | Custom animation config object. For more info, see the documentation down on [Custom Animation](#custom-animation) |
 
 ### \<BottomNavigationSwitch />
 
