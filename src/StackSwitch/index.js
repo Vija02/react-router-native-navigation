@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-native'
 import { View } from 'react-native'
+import cloneDeep from 'clone-deep'
 
 import StackAnim from './StackAnim'
 import UpdateIfMatch from '../utils/UpdateIfMatch'
@@ -21,6 +22,8 @@ class StackSwitch extends Component {
 			// Used to see what the POP action actually means
 			currentIndex: 0,
 			animDirection: 0, // [-1,0,1]
+			currentHistory: cloneDeep(this.props.history),
+			prevHistory: cloneDeep(this.props.history),
 		}
 	}
 
@@ -48,6 +51,20 @@ class StackSwitch extends Component {
 
 		const { stack, initialIndex } = this.state
 
+		let stateToUpdate = {
+			animating: true,
+		}
+
+		// Here we try to get the last history and current history. Again, because history is mutable
+		const deepClonedHistory = cloneDeep(this.props.history)
+		if (deepClonedHistory !== this.state.currentHistory) {
+			stateToUpdate = {
+				...stateToUpdate,
+				prevHistory: this.state.currentHistory,
+				currentHistory: deepClonedHistory,
+			}
+		}
+
 		// We want to handle anything you can do to history
 		// https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md
 		// Let's handle PUSH, POP and REPLACE. We make our `stack` state reflect the history
@@ -55,14 +72,24 @@ class StackSwitch extends Component {
 			// We'll effectively remove the locations after our index here
 			// Get until current location
 			const newStack = [...stack.slice(0, nextProps.history.index - initialIndex), nextProps.location]
-			this.setState({ animating: true, stack: newStack, currentIndex: nextProps.history.index, animDirection: -1 })
+			this.setState({
+				...stateToUpdate,
+				stack: newStack,
+				currentIndex: nextProps.history.index,
+				animDirection: -1,
+			})
 		} else if (nextProps.history.action === 'REPLACE') {
 			const newStack = [
 				...stack.slice(0, Math.max(nextProps.history.index - initialIndex - 1, 0)),
 				nextProps.location,
 				...stack.slice(nextProps.history.index - initialIndex + 1),
 			]
-			this.setState({ animating: true, stack: newStack, currentIndex: nextProps.history.index, animDirection: 0 })
+			this.setState({
+				...stateToUpdate,
+				stack: newStack,
+				currentIndex: nextProps.history.index,
+				animDirection: 0,
+			})
 		} else if (nextProps.history.action === 'POP') {
 			// POP happens when go() is called. So goForward and goBack will end up here.
 			// But we don't really care what happens since we're not doing anything to the stack.
@@ -71,9 +98,9 @@ class StackSwitch extends Component {
 			const step = nextProps.history.index - this.state.currentIndex
 
 			if (step > 0) {
-				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: -1 })
+				this.setState({ ...stateToUpdate, currentIndex: nextProps.history.index, animDirection: -1 })
 			} else {
-				this.setState({ animating: true, currentIndex: nextProps.history.index, animDirection: 1 })
+				this.setState({ ...stateToUpdate, currentIndex: nextProps.history.index, animDirection: 1 })
 			}
 		}
 		return
@@ -98,7 +125,12 @@ class StackSwitch extends Component {
 										this.setState({ animating: false })
 									}
 								}}
-								transitionConfig={this.props.transitionConfig}
+								mode={this.props.mode}
+								transitionConfigObject={this.props.transitionConfig(
+									this.state.currentHistory,
+									this.state.prevHistory,
+									false, // TODO: Handle isModal
+								)}
 								animDirection={this.state.animDirection}
 								currentScreen={this.props.history.index === this.state.initialIndex + index}
 							>

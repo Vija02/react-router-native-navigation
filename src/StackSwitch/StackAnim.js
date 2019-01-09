@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Animated, Dimensions } from 'react-native'
+import { Animated, Dimensions, View } from 'react-native'
 import { withRouter } from 'react-router-native'
 
 const { height } = Dimensions.get('window')
 
 const propTypes = {
-	transitionConfig: PropTypes.func,
+	transitionConfigObject: PropTypes.shape({
+		transitionSpec: PropTypes.shape({
+			duration: PropTypes.number,
+			easing: PropTypes.func,
+			timing: PropTypes.func,
+		}),
+		screenInterpolator: PropTypes.func,
+		containerStyle: View.propTypes.style,
+	}),
 }
 
 const defaultProps = {
-	transitionConfig: null,
+	transitionConfigObject: null,
 }
 
 // This Component gets info through props and is responsible to handle all the animation
@@ -23,22 +31,22 @@ class StackAnim extends Component {
 	}
 
 	componentDidMount() {
-		this.runAnimation(this.props.animDirection, 0, this.props.transitionConfig)
+		this.runAnimation(this.props.animDirection, 0, this.props.transitionConfigObject)
 	}
 
 	componentDidUpdate(prevProps) {
 		if (this.props.currentScreen !== prevProps.currentScreen) {
 			if (this.props.currentScreen) {
-				this.runAnimation(this.props.animDirection, 0, this.props.transitionConfig)
+				this.runAnimation(this.props.animDirection, 0, this.props.transitionConfigObject)
 			} else {
 				// Else, this is not current screen anymore. But it was, so value = 0
-				this.runAnimation(0, -this.props.animDirection, this.props.transitionConfig)
+				this.runAnimation(0, -this.props.animDirection, this.props.transitionConfigObject)
 			}
 		}
 	}
 
-	runAnimation(initialValue, toValue, transitionConfig) {
-		const { transitionSpec } = transitionConfig()
+	runAnimation(initialValue, toValue, transitionConfigObject) {
+		const { transitionSpec } = transitionConfigObject
 
 		this.state.animationValue.setValue(initialValue)
 		transitionSpec
@@ -71,8 +79,8 @@ class StackAnim extends Component {
 				pointerEvents={this.props.animating ? 'none' : 'auto'}
 				style={[
 					viewStyle,
-					this.props.transitionConfig().containerStyle || {},
-					this.props.transitionConfig().screenInterpolator({
+					this.props.transitionConfigObject.containerStyle || {},
+					this.props.transitionConfigObject.screenInterpolator({
 						layout: {
 							isMeasured: true,
 							initHeight: height,
