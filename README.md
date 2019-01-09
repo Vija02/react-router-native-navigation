@@ -37,12 +37,12 @@ export default class App extends React.Component {
 
 ## Features
 
+- [x] React Router goodness
 - [x] Remembers previous screen states
 - [x] Handles back button presses
 - [x] Custom animations
 - [ ] Allows nesting (I think this should work out of the box but not tested yet)
 - [ ] Baked in UI
-- [ ] Deep Linking
 - [ ] Lifecycle
 - [x] Stack Navigation 
 - [x] Bottom Navigation 
@@ -111,6 +111,10 @@ We could pass sufficient data to the parameters and have a separate compatibilit
 TODO:
 
 ## Glueing it yourself (UI customization)
+
+## Deep Linking
+
+Simply use `<DeepLinking />` provided by [react-router-native](https://reacttraining.com/react-router/native/api/DeepLinking)
 
 ## Motivation
 
