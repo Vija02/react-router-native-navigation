@@ -99,16 +99,44 @@ There are a few core differences between the `react-navigation` history and `rea
 I personally don't have a need to make this very thorough. If you're willing to make this better, you're more than welcomed to send a PR!
 We could pass sufficient data to the parameters and have a separate compatibility layer to map it to `react-navigation` (Something like [preact-compat](https://github.com/developit/preact-compat))
 
+You could do a simple modification to make libraries such as [react-navigation-transitions](https://github.com/plmok61/react-navigation-transitions) work. 
+Example: 
+```js
+const compat = config => {
+	return {
+		...config,
+		screenInterpolator: props => {
+			return config.screenInterpolator({ ...props, scene: { ...props.scene, index: 0 } })
+		},
+	}
+}
+```
+And on your component
+```js
+...
+render() {
+  return (
+    <StackSwitch 
+      transitionConfig={() => compat(fromLeft())}
+    >
+      ...
+    </StackSwitch>
+  )
+}
+...
+```
+
 #### Differences
 
-1. Parameters for function aren't the same for the most part.
+1. Parameters for function aren't the same for the most part. This can be documented better but for now, look at the `StackAnim.js` file
+
 2. `transitionConfig` return value doesn't handle:
 - `headerLeftInterpolator`
 - `headerTitleInterpolator`
 - `headerRightInterpolator`
 > Header are not handled in this library. Look at [current limitation](#current-limitations)
 
-TODO:
+3. The interpolation between screens happens from -1, 0 and 1 instead of between the indexes. Simply imagine `0` to be `index` and you're set. Look at the forked [StackViewTransitionConfigs](https://github.com/Vija02/react-router-native-navigation/tree/master/src/StackSwitch/StackViewTransitionConfigs) folder to see examples of modified configs to suit this library.
 
 ## Glueing it yourself (UI customization)
 
