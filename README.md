@@ -38,9 +38,9 @@ export default class App extends React.Component {
 ## Features
 
 - [x] Remembers previous screen states
-- [ ] Handles back button presses
-- [ ] Allows nesting
-- [ ] Custom animations
+- [x] Handles back button presses
+- [x] Custom animations
+- [ ] Allows nesting (I think this should work out of the box but not tested yet)
 - [ ] Baked in UI
 - [ ] Deep Linking
 - [ ] Lifecycle
@@ -94,9 +94,19 @@ These component are the core of this library. They make navigation behave like t
 
 React navigation, a popular library for navigation have their own way of specifying custom animation. This library tries as much as possible to make custom transitions compatible with this library.
 
-There are a few core differences between the `react-navigation` history and `react-router` history. Because of this, [the API for custom transition](https://reactnavigation.org/docs/en/stack-navigator.html) won't be exactly the same as `react-navigation`. Though, if you do a simple animation, it might work right off the bat.
+There are a few core differences between the `react-navigation` history and `react-router` history. Because of this, [the API for custom transition](https://reactnavigation.org/docs/en/stack-navigator.html) won't be exactly the same as `react-navigation`. However, it might work right off the bat in some scenario. 
+
+I personally don't have a need to make this very thorough. If you're willing to make this better, you're more than welcomed to send a PR!
+We could pass sufficient data to the parameters and have a separate compatibility layer to map it to `react-navigation` (Something like [preact-compat](https://github.com/developit/preact-compat))
 
 #### Differences
+
+1. Parameters for function aren't the same for the most part.
+2. `transitionConfig` return value doesn't handle:
+- `headerLeftInterpolator`
+- `headerTitleInterpolator`
+- `headerRightInterpolator`
+> Header are not handled in this library. Look at [current limitation](#current-limitations)
 
 TODO:
 
@@ -118,8 +128,6 @@ Last but not least, it should remain simple but customizable!
 
 The [history](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md) API can be a bit limiting for a complex navigation. For example, your history stack will get out of control if you don't configure it properly/never reset it. This is not great because all of the entries in the history stack will still be rendered even when it's not used. You can manually reset the stack by mutating the `history` object. But this will lead to inconsistency with this library. TODO: Perhaps we should add a method to allow changes from within the Switches component.
 
-TODO: [display: none doesn't put the element on the render tree](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#Render_tree_construction). So perhaps we should use that for elements not rendered. Not sure it that applies to react-native though
-
 No Header support. One of the big decision when this library was made was whether it should support have its own header. In the spirit of keeping things simple, you will have to bring your own header component. There's an example TODO: [here]() that illustrates how to do just that.  
 However, I'm aware there might be some demand for transitions inside the header itself. I'm open to suggestions on how best to implement it.
 
@@ -129,15 +137,14 @@ There are quite a few edge cases that might not be handled yet. Please report th
 
 ## TODO
 
-- [] Back Button on Stack
-- [] Custom Animation
-- [] Lifecycle
+- [ ] Lifecycle
 
 ## Roadmap
 
-- [] Web support
-- [] TypeScript
-- [] react-native-reanimated? 
+- [ ] Better animation config (Card shadows, etc)
+- [ ] Web support
+- [ ] TypeScript
+- [ ] react-native-reanimated? 
 > Right now we try to follow the API for custom animation with `react-navigation`. There are a bunch of components that we basically recreate in this package because the core history is different from `react-router`. In the future, it might be worth spending some time to see if we can reuse the components there. Namely: `<Transitioner />`, and custom animation. The reason this library still uses `Animated` instead of `react-native-reanimated` is because `react-navigation` doesn't support it yet.
 
 ## Credits
