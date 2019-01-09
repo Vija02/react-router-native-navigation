@@ -7,6 +7,8 @@ import cloneDeep from 'clone-deep'
 import StackAnim from './StackAnim'
 import UpdateIfMatch from '../utils/UpdateIfMatch'
 
+import { getTransitionConfig } from './StackViewTransitionConfigs'
+
 const propTypes = {
 	mode: PropTypes.string,
 	transitionConfig: PropTypes.func,
@@ -135,7 +137,8 @@ class StackSwitch extends Component {
 									}
 								}}
 								mode={this.props.mode}
-								transitionConfigObject={this.props.transitionConfig(
+								transitionConfigObject={getTransitionConfig(
+									this.props.transitionConfig,
 									this.state.currentHistory,
 									this.state.prevHistory,
 									false, // TODO: Handle isModal
