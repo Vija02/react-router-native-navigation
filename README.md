@@ -199,7 +199,7 @@ Last but not least, it should remain simple but customizable!
 
 ## Current Limitations
 
-To store previous states of the route, we emulate how `Switch` works. This meant that might be differences they behave. Right now, `props.match` and other props passed through probably behaves differently than you would expect. We could probably recreate the props ourself and pass it down.
+To store previous states of the route, we emulate how `Switch` works. This meant that might be differences they behave. Right now, `props.match` and other props passed through probably behaves differently than you would expect. We could probably recreate the props ourself and pass it down. This should not be a problem for bottom navigation. TODO: fix for Stack
 
 The [history](https://github.com/ReactTraining/react-router/blob/master/packages/react-router/docs/api/history.md) API can be a bit limiting for complex navigations. For example, your history stack will get out of control if you don't configure it properly/never reset it. This is not great because all of the entries in the history stack will still be rendered even when it's not used. You can manually reset the stack by mutating the `history` object. But this will lead to inconsistency with this library. TODO: Perhaps we should add a method to allow changes from within the Switch components.
 
@@ -212,6 +212,7 @@ There are probably plenty of edge cases that are not be handled yet. Please repo
 
 ## TODO
 
+- [ ] Move back button from switch to the full component
 - [ ] Lifecycle
 
 ## Roadmap

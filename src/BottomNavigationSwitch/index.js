@@ -21,31 +21,43 @@ class BottomNavigationSwitch extends Component {
 					{(() => {
 						let matched = false
 
-						return this.props.children.map((child, i) => (
-							<Route
-								key={`route_${i}`}
-								path={child.props.path}
-								exact={child.props.exact}
-								strict={child.props.strict}
-								sensitive={child.props.sensitive}
-								children={({ match }) => {
-									let isMatched = false
+						return this.props.children.map((child, i) => {
+							let elementToRender = () => null
 
-									if (!matched && !!match) {
-										isMatched = true
-										matched = true
-									}
-									return (
-										<ShowIfMatch match={isMatched} lazy={this.props.lazy}>
-											{/* We make the route always render by always matching the path */}
-											{React.cloneElement(child, {
-												location: { pathname: child.props.path },
-											})}
-										</ShowIfMatch>
-									)
-								}}
-							/>
-						))
+							if (!!child.props.component) {
+								elementToRender = props => <child.props.component {...props} />
+							} else if (!!child.props.render) {
+								elementToRender = props => child.props.render(props)
+							} else {
+								elementToRender = props => child.props.children(props)
+							}
+
+							return (
+								<Route
+									key={`route_${i}`}
+									path={child.props.path}
+									exact={child.props.exact}
+									strict={child.props.strict}
+									sensitive={child.props.sensitive}
+									children={props => {
+										const { match } = props
+
+										let isMatched = false
+
+										// We do this so only the first matched route renders
+										if (!matched && !!match) {
+											isMatched = true
+											matched = true
+										}
+										return (
+											<ShowIfMatch match={isMatched} lazy={this.props.lazy}>
+												{elementToRender(props)}
+											</ShowIfMatch>
+										)
+									}}
+								/>
+							)
+						})
 					})()}
 				</View>
 			</BackButton>
